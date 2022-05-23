@@ -10,7 +10,7 @@ const reducer = (state, action) => {
     };
   }
 
-  if (action.type === "INCREASE") {
+  /*   if (action.type === "INCREASE") {
     let tempCart = state.cart.map((item) => {
       if (item.id === action.payload) {
         return { ...item, amount: item.amount + 1 };
@@ -22,9 +22,9 @@ const reducer = (state, action) => {
       ...state,
       cart: tempCart,
     };
-  }
+  } */
 
-  if (action.type === "DECREASE") {
+  /*   if (action.type === "DECREASE") {
     let tempCart = state.cart
       .map((item) => {
         if (item.id === action.payload) {
@@ -38,7 +38,7 @@ const reducer = (state, action) => {
       ...state,
       cart: tempCart,
     };
-  }
+  } */
 
   if (action.type === "GET_TOTALS") {
     let { total, amount } = state.cart.reduce(
@@ -69,7 +69,24 @@ const reducer = (state, action) => {
     return { ...state, cart: action.payload, loading: false };
   }
 
-  return state;
+  if (action.type === "TOGGLE_AMOUNT") {
+    let tempCart = state.cart
+      .map((item) => {
+        if (item.id === action.payload.id) {
+          if (action.payload.type === "inc") {
+            return { ...item, amount: item.amount + 1 };
+          }
+          if (action.payload.type === "dec") {
+            return { ...item, amount: item.amount - 1 };
+          }
+        }
+        return item;
+      })
+      .filter((item) => item.amount !== 0);
+    return { ...state, cart: tempCart };
+  }
+
+  throw new Error("No matching actions type");
 };
 
 export default reducer;
